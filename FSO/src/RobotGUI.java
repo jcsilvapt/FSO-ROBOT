@@ -43,7 +43,7 @@ public class RobotGUI {
 	private int offSetLeft, offSetRight, angle, distance, radius;
 	private boolean wandering; // vaguear
 	private boolean avoid; // evitar
-	private boolean manager; // gestor
+	private Gestor manager; // gestor
 
 	// private RobotLegoEV3 robot;
 	private myRobot robot;
@@ -425,6 +425,7 @@ public class RobotGUI {
 		panelRobot.add(lblOffsetDrt);
 
 		chckbxVaguear = new JCheckBox("Vaguear");
+		chckbxVaguear.setEnabled(false);
 		chckbxVaguear.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		chckbxVaguear.setForeground(Color.WHITE);
 		chckbxVaguear.setBackground(Color.BLACK);
@@ -432,6 +433,7 @@ public class RobotGUI {
 		panelRobot.add(chckbxVaguear);
 
 		chckbxEvitar = new JCheckBox("Evitar");
+		chckbxEvitar.setEnabled(false);
 		chckbxEvitar.setForeground(Color.WHITE);
 		chckbxEvitar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		chckbxEvitar.setBackground(Color.BLACK);
@@ -439,6 +441,21 @@ public class RobotGUI {
 		panelRobot.add(chckbxEvitar);
 
 		chckbxGestor = new JCheckBox("Gestor");
+		chckbxGestor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(chckbxGestor.isSelected()){
+					chckbxEvitar.setEnabled(true);
+					chckbxVaguear.setEnabled(true);
+					manager = new Gestor();
+				}else {
+					chckbxEvitar.setEnabled(false);
+					chckbxVaguear.setEnabled(false);
+					manager = null;
+				}
+
+			}
+		});
 		chckbxGestor.setForeground(Color.WHITE);
 		chckbxGestor.setBackground(Color.BLACK);
 		chckbxGestor.setFont(new Font("Tahoma", Font.PLAIN, 15));
