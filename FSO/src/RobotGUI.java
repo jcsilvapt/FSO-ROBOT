@@ -44,6 +44,9 @@ public class RobotGUI {
 	private boolean wandering; // vaguear
 	private boolean avoid; // evitar
 	private Gestor manager; // gestor
+	public static final String ID = "gui";
+	
+	private Comunicar inbox;
 
 	// private RobotLegoEV3 robot;
 	private myRobot robot;
@@ -69,6 +72,7 @@ public class RobotGUI {
 	 */
 
 	public void init() {
+		this.inbox = new Comunicar(ID);
 		this.name = ""; // default - EV3
 		this.offSetLeft = 0;
 		this.offSetRight = 0;
@@ -82,6 +86,7 @@ public class RobotGUI {
 		this.txtRadius.setText(String.valueOf(radius));
 		this.txtAngle.setText(String.valueOf(angle));
 		this.txtDistance.setText(String.valueOf(distance));
+		
 	}
 
 	/**
@@ -111,9 +116,8 @@ public class RobotGUI {
 	 * Função para movimentar o robot para a frente
 	 */
 	public void moveForward() {
-		logger("Moving Forward");
-		robot.Reta(distance);
-		robot.Parar(false);
+		manager.getInbox().enviarMsg("frente");
+		manager.moveForward();
 	}
 
 	/**
