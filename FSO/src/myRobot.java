@@ -16,29 +16,28 @@ public class myRobot {
 		return false;
 	}
 	
-	public String CurvarDireita(int raio, int angulo) {
-		return "A virar " + String.valueOf(angulo) + " graus num raio de " + String.valueOf(raio) + ".";
+	public void CurvarDireita(int raio, int angulo) {
+		System.out.println("A virar " + angulo + " graus num raio de " + raio + ".");
 	}
 	
-	public String CurvarEsquerda(int raio, int angulo) {
-		return "A virar " + String.valueOf(angulo+90) + " graus num raio de " + String.valueOf(raio) + ".";
+	public void CurvarEsquerda(int raio, int angulo) {
+		System.out.println("A virar " + angulo + " graus num raio de " + raio + ".");
 	}
 	
 	public String Reta(int distancia) {
 		if(distancia >= 0) {
-			return "A andar " + String.valueOf(distancia) + ".";
+			return "A andar " + distancia + ".";
 		}else {
-			return "A recuar " + String.valueOf(distancia) + ".";
+			return "A recuar " + Math.abs(distancia) + ".";
 		}
 	}
 	
-	public boolean Parar(boolean value) {
+	public void Parar(boolean value) {
 		if(value) {
 			System.out.println("Parar!");
 		}else {
 			System.out.println("Parar assim que conseguir!");
 		}
-		return value;
 	}
 	
 	public String CloseEV3() {

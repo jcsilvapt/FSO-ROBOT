@@ -34,8 +34,7 @@ public class Comunicar implements iMensagem {
 	public void enviarMsg(String msg) {
 		// FIXME Auto-generated method stub
 		for (int i = 0; i < msg.split(";").length; i++) {
-			buffer.put(msg.split(";")[i].getBytes());
-			System.out.println(buffer.put(msg.split(";")[i].getBytes()));
+			buffer.put(msg.split(";")[i]);
 		}
 	}
 
