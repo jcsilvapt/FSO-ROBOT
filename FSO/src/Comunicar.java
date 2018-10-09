@@ -13,6 +13,25 @@ public class Comunicar implements iMensagem {
 	MappedByteBuffer buffer;
 
 	final int BUFFER_MAX = 30;
+	
+	/* Caixas */
+	private static byte GESTOR 	= 1;
+	private static byte GUI 	= 2;
+	private static byte VAGUEAR = 3;
+	private static byte EVITAR 	= 4;
+	
+	/* Accoes */
+	public static byte AVANCAR 	= 5;
+	public static byte RECUAR 	= 6;
+	public static byte ESQ	    = 7;
+	public static byte DRT     	= 8;
+	public static byte PARAR 	= 9;
+	
+	public static byte STOQUE	= 10;
+	
+	/* Ligações */
+	public static byte OPEN		= 11;
+	public static byte CLOSE	= 12;
 
 	public Comunicar(String nome) {
 		caixaMsg = new File(nome + ".dat");
@@ -29,26 +48,27 @@ public class Comunicar implements iMensagem {
 			e.printStackTrace();
 		}
 	}
+	
+	public void codificar(byte[] cmd) {
+		
+	}
 
 	@Override
-	public void enviarMsg(String msg) {
+	public void enviarMsg(byte[] msg) {
 		// FIXME Auto-generated method stub
-		for (int i = 0; i < msg.split(";").length; i++) {
-			buffer.put(msg.split(";")[i]);
+		this.buffer.position(0);
+		for(int i = 0; i < msg.length; i++) {
+			buffer.put(msg[i]);
 		}
+		receberMsg();
 	}
 
 	@Override
 	public String receberMsg() {
-//		String msg=new String();
-//		char c;
-//		buffer.position(0);
-//		while ((c = buffer.getChar()) != '\0')
-//			msg += c;
-		for(int i = 0; i < BUFFER_MAX; i++) {
-			System.out.println(buffer.getChar());
+		for(int i = 0; i < 3; i++) {
+			System.out.println(buffer.get(i));
 		}
-		return "";
+		return null;
 	}
 
 	public void fecharCanal() {
@@ -58,11 +78,5 @@ public class Comunicar implements iMensagem {
 			e.printStackTrace();
 		}
 
-	}
-
-	public static void main(String[] args) {
-		String msg = "0;1;11;34;54";
-		Comunicar teste = new Comunicar("teste");
-		teste.enviarMsg(msg);
 	}
 }

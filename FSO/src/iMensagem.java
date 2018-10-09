@@ -1,7 +1,7 @@
 
 public interface iMensagem {
 	
-	void enviarMsg(String msg);
+	void enviarMsg(byte[] msg);
 	
 	String receberMsg();
 	

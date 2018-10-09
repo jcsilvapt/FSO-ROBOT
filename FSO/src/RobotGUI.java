@@ -44,9 +44,11 @@ public class RobotGUI {
 	private boolean wandering; // vaguear
 	private boolean avoid; // evitar
 	private Gestor manager; // gestor
-	public static final String ID = "gui";
+	
+	public static final byte ID = 2;
 	
 	private Comunicar inbox;
+	private Comunicar gestorBox = new Comunicar("gestor");
 
 	// private RobotLegoEV3 robot;
 	private myRobot robot;
@@ -72,7 +74,7 @@ public class RobotGUI {
 	 */
 
 	public void init() {
-		this.inbox = new Comunicar(ID);
+		this.inbox = new Comunicar("gui");
 		this.name = ""; // default - EV3
 		this.offSetLeft = 0;
 		this.offSetRight = 0;
@@ -110,50 +112,7 @@ public class RobotGUI {
 		}
 	}
 
-	// Inicio para Movimentação
 
-	/**
-	 * Função para movimentar o robot para a frente
-	 */
-	public void moveForward() {
-		manager.getInbox().enviarMsg("frente");
-		manager.moveForward();
-	}
-
-	/**
-	 * Função para movimentar o robot para trás
-	 */
-	public void moveBackwards() {
-		logger("Moving Backwards");
-		robot.Reta(-distance);
-		robot.Parar(false);
-	}
-
-	/**
-	 * Função para parar movimento do robot
-	 */
-	public void moveStop() {
-		logger("Stopping");
-		robot.Parar(true);
-	}
-
-	/**
-	 * Função para virar para a Esquerda
-	 */
-	public void moveLeft() {
-		logger("Moving Left");
-		robot.CurvarDireita(radius, angle);
-	}
-
-	/**
-	 * Função para curvar para a direita
-	 */
-	public void moveRight() {
-		logger("Moving Right");
-		robot.CurvarEsquerda(radius, angle);
-	}
-
-	// Fim de Movimentação
 
 	/**
 	 * Função para fazer ligação ao robot EV3
@@ -291,6 +250,11 @@ public class RobotGUI {
 		txtDistance.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
+					if(Integer.parseInt(txtDistance.getText()) >= 0 && Integer.parseInt(txtDistance.getText()) <= 127) {
+						txtDistance.setBackground(Color.white);
+					}else {
+						txtDistance.setBackground(Color.red);
+					}
 					distance = Integer.parseInt(txtDistance.getText());
 				}
 			}
@@ -334,7 +298,7 @@ public class RobotGUI {
 		JButton btnAvancar = new JButton("Avan\u00E7ar");
 		btnAvancar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				moveForward();
+				gestorBox.enviarMsg(new byte[] {ID,Comunicar.AVANCAR, Byte.parseByte(txtDistance.getText())});
 			}
 		});
 		btnAvancar.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -345,7 +309,7 @@ public class RobotGUI {
 		btnParar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnParar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				moveStop();
+				
 			}
 		});
 		btnParar.setBounds(272, 104, 76, 32);
@@ -355,7 +319,7 @@ public class RobotGUI {
 		btnRecuar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnRecuar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				moveBackwards();
+				
 			}
 		});
 		btnRecuar.setBounds(272, 164, 76, 32);
@@ -364,7 +328,7 @@ public class RobotGUI {
 		JButton btnEsquerda = new JButton("Esquerda");
 		btnEsquerda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				moveLeft();
+				
 			}
 		});
 		btnEsquerda.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -374,7 +338,7 @@ public class RobotGUI {
 		JButton btnDireita = new JButton("Direita");
 		btnDireita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				moveRight();
+				
 			}
 		});
 		btnDireita.setFont(new Font("Tahoma", Font.PLAIN, 10));
