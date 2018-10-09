@@ -309,7 +309,7 @@ public class RobotGUI {
 		btnParar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnParar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				gestorBox.enviarMsg(new byte[] {ID,Comunicar.PARAR, 1});
 			}
 		});
 		btnParar.setBounds(272, 104, 76, 32);
@@ -319,7 +319,7 @@ public class RobotGUI {
 		btnRecuar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnRecuar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				gestorBox.enviarMsg(new byte[] {ID,Comunicar.RECUAR, Byte.parseByte(txtDistance.getText())});
 			}
 		});
 		btnRecuar.setBounds(272, 164, 76, 32);
@@ -328,7 +328,7 @@ public class RobotGUI {
 		JButton btnEsquerda = new JButton("Esquerda");
 		btnEsquerda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				gestorBox.enviarMsg(new byte[] {ID,Comunicar.ESQ, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())});
 			}
 		});
 		btnEsquerda.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -338,7 +338,7 @@ public class RobotGUI {
 		JButton btnDireita = new JButton("Direita");
 		btnDireita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				gestorBox.enviarMsg(new byte[] {ID,Comunicar.DRT, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())});
 			}
 		});
 		btnDireita.setFont(new Font("Tahoma", Font.PLAIN, 10));

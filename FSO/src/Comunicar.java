@@ -49,7 +49,7 @@ public class Comunicar implements iMensagem {
 		}
 	}
 	
-	public void codificar(byte[] cmd) {
+	public void descodificar(byte[] cmd) {
 		
 	}
 
