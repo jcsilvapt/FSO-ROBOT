@@ -4,37 +4,23 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Arrays;
 
 public class Comunicar implements iMensagem {
 
 	File caixaMsg;
 	FileChannel canal;
 	MappedByteBuffer buffer;
+	private String eusou;
 
 	final int BUFFER_MAX = 30;
 	
 	/* Caixas */
-	private static byte GESTOR 	= 1;
-	private static byte GUI 	= 2;
-	private static byte VAGUEAR = 3;
-	private static byte EVITAR 	= 4;
-	
-	/* Accoes */
-	public static byte AVANCAR 	= 5;
-	public static byte RECUAR 	= 6;
-	public static byte ESQ	    = 7;
-	public static byte DRT     	= 8;
-	public static byte PARAR 	= 9;
-	
-	public static byte STOQUE	= 10;
-	
-	/* Ligações */
-	public static byte OPEN		= 11;
-	public static byte CLOSE	= 12;
 
+
+	@SuppressWarnings("resource")
 	public Comunicar(String nome) {
 		caixaMsg = new File(nome + ".dat");
+		this.eusou = nome;
 
 		try {
 			canal = new RandomAccessFile(caixaMsg, "rw").getChannel();
@@ -52,23 +38,61 @@ public class Comunicar implements iMensagem {
 	public void descodificar(byte[] cmd) {
 		
 	}
-
-	@Override
-	public void enviarMsg(byte[] msg) {
-		// FIXME Auto-generated method stub
-		this.buffer.position(0);
+	
+	public void enviarMsg(byte[] msg, String name) {
+		int size;
+		boolean toConnect = false;
+		for(;;) {
+			buffer.position(0);
+			if(buffer.get() == 0) {
+				break;
+			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		buffer.position(0);
+		if(name == null) {
+			size = msg.length;
+			buffer.put((byte) size);
+		}else {
+			size = msg.length + name.length();
+			buffer.put((byte) size);
+			toConnect = true;
+		}
 		for(int i = 0; i < msg.length; i++) {
 			buffer.put(msg[i]);
+			if(i == (msg.length-1) && toConnect){
+				for(int n = 0 ; n < name.length(); n++){
+					buffer.putChar(name.charAt(n));
+				}
+			}
 		}
-		receberMsg();
 	}
+//	@Override
+//	public void enviarMsg(byte[] msg) {
+//		// FIXME Auto-generated method stub
+//		this.buffer.position(0);
+//		for(int i = 0; i < msg.length; i++) {
+//			buffer.put(msg[i]);
+//		}
+//	}
 
 	@Override
 	public String receberMsg() {
-		for(int i = 0; i < 3; i++) {
-			System.out.println(buffer.get(i));
+		StringBuilder msg = new StringBuilder();
+		buffer.position(0);
+		char aux;
+		byte var;
+		while((var = buffer.get()) != 0) {
+			System.out.println("fudeu");
+			msg.append(var);
 		}
-		return null;
+		buffer.position(0);
+		buffer.put((byte) 0);
+		return msg.toString();
 	}
 
 	public void fecharCanal() {

@@ -1,27 +1,38 @@
 
-public class Gestor {
-
-	private myRobot robot;
-
+public class Gestor extends Thread {
+	
+	public static final byte ID = 1;
+	
 	private Comunicar inbox;
-	public static final String ID = "gestor";
-
-	public Gestor() {
-		inbox = new Comunicar(ID);
-	}
+	private Comunicar gui;
+	private Comunicar evitar;
+	private Comunicar vaguear;
 	
-	public Comunicar getInbox() {
-		return inbox;
-	}
+	private myRobot robot;
 	
-	// Inicio para Movimentação
-
 	/**
-	 * Função para movimentar o robot para a frente
+	 * Constructor, Inicializa as restantes caixa automaticamente
 	 */
-	public void moveForward() {
-		System.out.println(inbox.receberMsg());
+	public Gestor() {
+		inbox 	= new Comunicar("gestor");
+		gui 	= new Comunicar("gui");
+		evitar 	= new Comunicar("evitar");
+		vaguear = new Comunicar("vaguear");
+		this.robot = new myRobot();
 	}
-
+	
+	public void le(){
+		String msg = inbox.receberMsg();
+		System.out.println();
+		System.out.println(msg);
+	}
+	
+	private boolean robotConnect(String name) {
+		if(robot.OpenEV3(name)){
+			return true;
+		}else {
+			return false;
+		}
+	}
 	
 }
