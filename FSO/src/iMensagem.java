@@ -2,8 +2,8 @@
 public interface iMensagem {
 	
 	public static byte GESTOR 	= 1;
-	public static byte GUI 	= 2;
-	public static byte VAGUEAR = 3;
+	public static byte GUI 		= 2;
+	public static byte VAGUEAR 	= 3;
 	public static byte EVITAR 	= 4;
 	
 	/* Accoes */
@@ -22,5 +22,7 @@ public interface iMensagem {
 	void enviarMsg(byte[] msg, String name);
 	
 	String receberMsg();
+
+	//void descodificar(String msg);
 	
 }

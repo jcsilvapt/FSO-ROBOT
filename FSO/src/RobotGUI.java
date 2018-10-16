@@ -338,7 +338,8 @@ public class RobotGUI {
 		JButton btnEsquerda = new JButton("Esquerda");
 		btnEsquerda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.ESQ, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())});
+				gestorBox.enviarMsg(new byte[] {ID,Comunicar.ESQ, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())}, "");
+				manager.le();
 			}
 		});
 		btnEsquerda.setFont(new Font("Tahoma", Font.PLAIN, 10));

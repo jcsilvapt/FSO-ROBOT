@@ -11,6 +11,7 @@ public class Comunicar implements iMensagem {
 	FileChannel canal;
 	MappedByteBuffer buffer;
 	private String eusou;
+	private String path = "..\\coms\\";
 
 	final int BUFFER_MAX = 30;
 	
@@ -19,7 +20,7 @@ public class Comunicar implements iMensagem {
 
 	@SuppressWarnings("resource")
 	public Comunicar(String nome) {
-		caixaMsg = new File(nome + ".dat");
+		caixaMsg = new File(path + nome + ".dat");
 		this.eusou = nome;
 
 		try {
@@ -54,20 +55,21 @@ public class Comunicar implements iMensagem {
 			}
 		}
 		buffer.position(0);
-		if(name == null) {
-			size = msg.length;
-			buffer.put((byte) size);
+		if(name.length() == 0) {
+			buffer.put((byte) 1);
 		}else {
-			size = msg.length + name.length();
+			size = msg.length;
 			buffer.put((byte) size);
 			toConnect = true;
 		}
 		for(int i = 0; i < msg.length; i++) {
 			buffer.put(msg[i]);
 			if(i == (msg.length-1) && toConnect){
+				buffer.put((byte) 0);
 				for(int n = 0 ; n < name.length(); n++){
 					buffer.putChar(name.charAt(n));
 				}
+				buffer.putChar('\0');
 			}
 		}
 	}
@@ -82,13 +84,17 @@ public class Comunicar implements iMensagem {
 
 	@Override
 	public String receberMsg() {
+		
 		StringBuilder msg = new StringBuilder();
 		buffer.position(0);
 		char aux;
 		byte var;
 		while((var = buffer.get()) != 0) {
-			System.out.println("fudeu");
-			msg.append(var);
+			msg.append(var + ";");
+			
+		}
+		while((aux = buffer.getChar()) != '\0'){
+			msg.append(String.valueOf(aux));
 		}
 		buffer.position(0);
 		buffer.put((byte) 0);
