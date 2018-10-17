@@ -40,7 +40,7 @@ public class RobotGUI {
 
 	// Variaveis Globais
 	private String name;
-	private int offSetLeft, offSetRight, angle, distance, radius;
+	private byte offSetLeft, offSetRight, angle, distance, radius;
 	private boolean wandering; // vaguear
 	private boolean avoid; // evitar
 	private Gestor manager; // gestor
@@ -52,6 +52,8 @@ public class RobotGUI {
 
 	// private RobotLegoEV3 robot;
 	private myRobot robot;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -89,6 +91,30 @@ public class RobotGUI {
 		this.txtAngle.setText(String.valueOf(angle));
 		this.txtDistance.setText(String.valueOf(distance));
 		
+	}
+	
+	/**
+	 * Funcao para verificar textfields
+	 */
+	
+	public boolean verificaCampo(String n) {
+		if (n.trim().length() != 0) {
+			char[] aux = n.toCharArray();
+			for (int x = 0; x < aux.length; ++x) {
+				if (!Character.isDigit(aux[x])) {
+					return false;
+				}
+			}
+			if (Integer.parseInt(n) > 127 || Integer.parseInt(n) < 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
@@ -260,12 +286,13 @@ public class RobotGUI {
 		txtDistance.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					if(Integer.parseInt(txtDistance.getText()) >= 0 && Integer.parseInt(txtDistance.getText()) <= 127) {
+					if(verificaCampo(txtDistance.getText())) {
 						txtDistance.setBackground(Color.white);
-					}else {
+						distance = Byte.parseByte(txtDistance.getText());
+					}
+					else {
 						txtDistance.setBackground(Color.red);
 					}
-					distance = Integer.parseInt(txtDistance.getText());
 				}
 			}
 		});
@@ -280,7 +307,13 @@ public class RobotGUI {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					angle = Integer.parseInt(txtAngle.getText());
+					if(verificaCampo(txtAngle.getText())) {
+						txtAngle.setBackground(Color.white);
+						angle = Byte.parseByte(txtAngle.getText());
+					}
+					else {
+						txtAngle.setBackground(Color.red);
+					}
 				}
 			}
 		});
@@ -295,7 +328,13 @@ public class RobotGUI {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					radius = Integer.parseInt(txtRadius.getText());
+					if(verificaCampo(txtRadius.getText())) {
+						txtRadius.setBackground(Color.white);
+						radius = Byte.parseByte(txtRadius.getText());
+					}
+					else {
+						txtRadius.setBackground(Color.red);
+					}
 				}
 			}
 		});
@@ -338,7 +377,7 @@ public class RobotGUI {
 		JButton btnEsquerda = new JButton("Esquerda");
 		btnEsquerda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				gestorBox.enviarMsg(new byte[] {ID,Comunicar.ESQ, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())}, "");
+				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.ESQ, radius, angle}, "");
 				manager.le();
 			}
 		});
@@ -370,7 +409,7 @@ public class RobotGUI {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					offSetLeft = Integer.parseInt(txtOffsetLeft.getText());
+					offSetLeft = Byte.parseByte(txtOffsetLeft.getText());
 				}
 			}
 		});
@@ -385,7 +424,7 @@ public class RobotGUI {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					offSetRight = Integer.parseInt(txtOffsetRight.getText());
+					offSetRight = Byte.parseByte(txtOffsetRight.getText());
 				}
 			}
 		});
