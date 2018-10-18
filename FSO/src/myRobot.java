@@ -1,6 +1,6 @@
 
 public class myRobot {
-	private final String ROBOTNAME = "EV";
+	private final String ROBOTNAME = "EV3";
 	
 	public myRobot() {
 		System.out.println("MyRobot");
