@@ -81,6 +81,18 @@ public class Gestor extends Thread {
 		
 	}
 	
-	
+	public void run() {
+		for(;;) {
+			try {
+				String msg = inbox.receberMsg();		
+				descodificar(msg);
+				System.out.println(msg);
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				// FIXME Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	
 }

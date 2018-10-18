@@ -4,26 +4,23 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.Arrays;
+
 
 public class Comunicar implements iMensagem {
 
 	File caixaMsg;
 	FileChannel canal;
 	MappedByteBuffer buffer;
-	private String eusou;
-	//private String path = "..\\coms\\";
-
+	FileLock lock;
 	final int BUFFER_MAX = 30;
 	
 	/* Caixas */
 
 
-	@SuppressWarnings("resource")
 	public Comunicar(String nome) {
 		caixaMsg = new File(/*"..\\coms\\" +*/ nome + ".dat");
-		this.eusou = nome;
-
 		try {
 			canal = new RandomAccessFile(caixaMsg, "rw").getChannel();
 		} catch (FileNotFoundException e) {
@@ -46,21 +43,31 @@ public class Comunicar implements iMensagem {
 	}
 	
 	public void enviarMsg(byte[] msg, String name) {
-		//int size;
-		//boolean toConnect = false;
-		for(;;) {
-			buffer.position(0);
-			if(buffer.get() == 0) {
-				break;
+		lock = null;
+		try {
+			for(;;) {
+				lock = canal.lock();
+				if(buffer.get() == 0) {
+					break;
+				}
+				lock.release();
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				buffer.position(0);
 			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		} catch (IOException e) {}
+		finally {
+			if (lock == null) { 
+				try {
+					lock.release();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+			}	
 		}
-		
-		
 		buffer.position(0);
 		for(int x = 0; x < msg.length; ++x) {
 			buffer.put(msg[x]);
@@ -70,33 +77,6 @@ public class Comunicar implements iMensagem {
 			buffer.putChar(name.charAt(y));
 		}
 		buffer.putChar('\0');
-		
-		
-		
-		
-		/*
-		if(name.length() == 0) {
-			buffer.put((byte) 1);
-		}else {
-			size = msg.length;
-			buffer.put((byte) size);
-			toConnect = true;
-		}
-		for(int i = 0; i < msg.length; i++) {
-			buffer.put(msg[i]);
-			if(i == (msg.length-1) && toConnect){
-				buffer.put((byte) 0);
-				for(int n = 0 ; n < name.length(); n++){
-					buffer.putChar(name.charAt(n));
-				}
-				buffer.putChar('\0');
-			}
-			else if (i == (msg.length-1) && !toConnect) {
-				buffer.put((byte) 0);
-				buffer.putChar('\0');
-			}
-		}
-		*/
 	}
 	
 	
@@ -112,6 +92,31 @@ public class Comunicar implements iMensagem {
 
 	@Override
 	public String receberMsg() {
+		lock = null;
+		try {
+			for(;;) {
+				lock = canal.lock();
+				if(buffer.get() != 0) {
+					break;
+				}
+				lock.release();
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				buffer.position(0);
+			}
+		} catch (IOException e) {}
+		finally {
+			if (lock == null) { 
+				try {
+					lock.release();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+			}	
+		}
 		buffer.position(0);
 		StringBuilder msg = new StringBuilder();
 		char aux;

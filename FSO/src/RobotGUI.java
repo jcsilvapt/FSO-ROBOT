@@ -474,6 +474,7 @@ public class RobotGUI {
 					chckbxEvitar.setEnabled(true);
 					chckbxVaguear.setEnabled(true);
 					manager = new Gestor();
+					manager.start();
 				}else {
 					chckbxEvitar.setEnabled(false);
 					chckbxVaguear.setEnabled(false);
