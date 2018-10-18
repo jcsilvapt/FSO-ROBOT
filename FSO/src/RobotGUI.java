@@ -347,6 +347,8 @@ public class RobotGUI {
 		JButton btnAvancar = new JButton("Avan\u00E7ar");
 		btnAvancar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.AVANCAR, distance}, "");
+				manager.le();
 				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.AVANCAR, Byte.parseByte(txtDistance.getText())});
 			}
 		});
@@ -358,6 +360,8 @@ public class RobotGUI {
 		btnParar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnParar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.RECUAR, }, "");
+				//manager.le();
 				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.PARAR, 1});
 			}
 		});
@@ -368,6 +372,8 @@ public class RobotGUI {
 		btnRecuar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnRecuar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.RECUAR, distance}, "");
+				manager.le();
 				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.RECUAR, Byte.parseByte(txtDistance.getText())});
 			}
 		});
@@ -389,6 +395,8 @@ public class RobotGUI {
 		btnDireita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.DRT, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())});
+				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.DRT, radius, angle}, "");
+				manager.le();
 			}
 		});
 		btnDireita.setFont(new Font("Tahoma", Font.PLAIN, 10));

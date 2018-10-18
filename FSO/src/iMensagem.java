@@ -7,17 +7,18 @@ public interface iMensagem {
 	public static byte EVITAR 	= 4;
 	
 	/* Accoes */
-	public static byte AVANCAR 	= 5;
-	public static byte RECUAR 	= 6;
-	public static byte ESQ	    = 7;
-	public static byte DRT     	= 8;
-	public static byte PARAR 	= 9;
+	public static byte AVANCAR 	= 1;
+	public static byte RECUAR 	= 2;
+	public static byte ESQ	    = 3;
+	public static byte DRT     	= 4;
+	public static byte PARAR 	= 5;
+	public static byte OPEN		= 6;
+	public static byte CLOSE	= 7;
 	
-	public static byte STOQUE	= 10;
+	public static byte STOQUE	= 8;
+	//public static byte RESPONDERTOQUE = 9;
 	
-	/* Ligações */
-	public static byte OPEN		= 11;
-	public static byte CLOSE	= 12;
+	
 	
 	void enviarMsg(byte[] msg, String name);
 	
