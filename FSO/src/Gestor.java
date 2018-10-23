@@ -11,6 +11,8 @@ public class Gestor extends Thread {
 	
 	private myRobot robot;
 	
+	private static final int WAIT = 250;
+	
 	/**
 	 * Constructor, Inicializa as restantes caixa automaticamente
 	 */
@@ -29,11 +31,20 @@ public class Gestor extends Thread {
 		System.out.println(msg);
 	}
 	
-	private boolean robotConnect(String name) {
-		if(robot.OpenEV3(name)){
-			return true;
-		}else {
-			return false;
+	private void robotConnect(String name) {
+		this.robot = new myRobot();
+		boolean control = true;
+		while(control) {
+			if(robot.OpenEV3(name)) {
+				gui.enviarMsg(new byte[] {Comunicar.GESTOR, Comunicar.TRUE}, "");
+				control = false;
+			} else {
+				try {
+					Thread.sleep(WAIT);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	

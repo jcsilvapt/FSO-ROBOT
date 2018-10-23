@@ -16,6 +16,9 @@ public interface iMensagem {
 	public static byte CLOSE	= 7;
 	
 	public static byte STOQUE	= 8;
+	
+	public static byte TRUE 	= 1;
+	public static byte FALSE 	= 0;
 	//public static byte RESPONDERTOQUE = 9;
 	
 	

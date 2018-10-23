@@ -21,7 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-public class RobotGUI {
+public class RobotGUI extends Thread {
 
 	private JFrame frame;
 	private JTextField txtNomeRobot;
@@ -41,19 +41,18 @@ public class RobotGUI {
 	// Variaveis Globais
 	private String name;
 	private byte offSetLeft, offSetRight, angle, distance, radius;
+	private boolean robotOn = false;
 	private boolean wandering; // vaguear
 	private boolean avoid; // evitar
 	private Gestor manager; // gestor
-	
+
 	public static final byte ID = 2;
-	
+
 	private Comunicar inbox;
 	private Comunicar gestorBox = new Comunicar("gestor");
 
 	// private RobotLegoEV3 robot;
 	private myRobot robot;
-	
-	
 
 	/**
 	 * Launch the application.
@@ -90,13 +89,13 @@ public class RobotGUI {
 		this.txtRadius.setText(String.valueOf(radius));
 		this.txtAngle.setText(String.valueOf(angle));
 		this.txtDistance.setText(String.valueOf(distance));
-		
+
 	}
-	
+
 	/**
 	 * Funcao para verificar textfields
 	 */
-	
+
 	public boolean verificaCampo(String n) {
 		if (n.trim().length() != 0) {
 			char[] aux = n.toCharArray();
@@ -107,12 +106,10 @@ public class RobotGUI {
 			}
 			if (Integer.parseInt(n) > 127 || Integer.parseInt(n) < 0) {
 				return false;
-			}
-			else {
+			} else {
 				return true;
 			}
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -138,40 +135,35 @@ public class RobotGUI {
 		}
 	}
 
-
-
 	/**
 	 * Função para fazer ligação ao robot EV3
 	 * 
 	 * @param name
 	 */
 	public void connectRobot(String name) {
-		if(name.equals("") || name == null || name.length() == 0) {
+		if (name.equals("") || name == null || name.length() == 0) {
 			logger("Nome do Robot vazio...");
-		}else {
-			gestorBox.enviarMsg(new byte[] {ID,Comunicar.OPEN}, this.name);
-			manager.le();
+		} else {
+			if (!this.robotOn)
+				gestorBox.enviarMsg(new byte[] { ID, Comunicar.OPEN }, this.name);
+			else
+				gestorBox.enviarMsg(new byte[] { Comunicar.GUI, Comunicar.CLOSE }, "");
+
 		}
-		
+
 	}
-//	public boolean connectRobot(String name) {
-//		if(name.equals("") || name == null || name.length()==0) {
-//			return false;
-//		}
-//		//this.robot = new RobotLegoEV3();
-//		this.robot = new myRobot();
-//		boolean control = true;
-//		while (control)
-//			if (robot.OpenEV3(name)) {
-//				btnConectar.setText("Desligar");
-//				lblConectado.setBackground(Color.GREEN);
-//				control = false;
-//			} else {
-//				btnConectar.setText("Ligar");
-//				lblConectado.setBackground(Color.RED);
-//			}
-//		return true;
-//	}
+
+	private void robotConnected(boolean value) {
+		if (value) {
+			btnConectar.setText("Desligar");
+			lblConectado.setBackground(Color.GREEN);
+			this.robotOn = true;
+		} else {
+			btnConectar.setText("Ligar");
+			lblConectado.setBackground(Color.RED);
+			this.robotOn = false;
+		}
+	}
 
 	public void disconnectRobot() {
 		robot.CloseEV3();
@@ -286,11 +278,10 @@ public class RobotGUI {
 		txtDistance.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					if(verificaCampo(txtDistance.getText())) {
+					if (verificaCampo(txtDistance.getText())) {
 						txtDistance.setBackground(Color.white);
 						distance = Byte.parseByte(txtDistance.getText());
-					}
-					else {
+					} else {
 						txtDistance.setBackground(Color.red);
 					}
 				}
@@ -307,11 +298,10 @@ public class RobotGUI {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					if(verificaCampo(txtAngle.getText())) {
+					if (verificaCampo(txtAngle.getText())) {
 						txtAngle.setBackground(Color.white);
 						angle = Byte.parseByte(txtAngle.getText());
-					}
-					else {
+					} else {
 						txtAngle.setBackground(Color.red);
 					}
 				}
@@ -328,11 +318,10 @@ public class RobotGUI {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
-					if(verificaCampo(txtRadius.getText())) {
+					if (verificaCampo(txtRadius.getText())) {
 						txtRadius.setBackground(Color.white);
 						radius = Byte.parseByte(txtRadius.getText());
-					}
-					else {
+					} else {
 						txtRadius.setBackground(Color.red);
 					}
 				}
@@ -347,9 +336,10 @@ public class RobotGUI {
 		JButton btnAvancar = new JButton("Avan\u00E7ar");
 		btnAvancar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.AVANCAR, distance}, "");
+				gestorBox.enviarMsg(new byte[] { Comunicar.GUI, Comunicar.AVANCAR, distance }, "");
 				manager.le();
-				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.AVANCAR, Byte.parseByte(txtDistance.getText())});
+				// gestorBox.enviarMsg(new byte[] {ID,Comunicar.AVANCAR,
+				// Byte.parseByte(txtDistance.getText())});
 			}
 		});
 		btnAvancar.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -360,9 +350,10 @@ public class RobotGUI {
 		btnParar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnParar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.RECUAR, }, "");
-				//manager.le();
-				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.PARAR, 1});
+				// gestorBox.enviarMsg(new byte[] {Comunicar.GUI,
+				// Comunicar.RECUAR, }, "");
+				// manager.le();
+				// gestorBox.enviarMsg(new byte[] {ID,Comunicar.PARAR, 1});
 			}
 		});
 		btnParar.setBounds(272, 104, 76, 32);
@@ -372,9 +363,10 @@ public class RobotGUI {
 		btnRecuar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnRecuar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.RECUAR, distance}, "");
+				gestorBox.enviarMsg(new byte[] { Comunicar.GUI, Comunicar.RECUAR, distance }, "");
 				manager.le();
-				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.RECUAR, Byte.parseByte(txtDistance.getText())});
+				// gestorBox.enviarMsg(new byte[] {ID,Comunicar.RECUAR,
+				// Byte.parseByte(txtDistance.getText())});
 			}
 		});
 		btnRecuar.setBounds(272, 164, 76, 32);
@@ -383,7 +375,7 @@ public class RobotGUI {
 		JButton btnEsquerda = new JButton("Esquerda");
 		btnEsquerda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.ESQ, radius, angle}, "");
+				gestorBox.enviarMsg(new byte[] { Comunicar.GUI, Comunicar.ESQ, radius, angle }, "");
 				manager.le();
 			}
 		});
@@ -394,8 +386,10 @@ public class RobotGUI {
 		JButton btnDireita = new JButton("Direita");
 		btnDireita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//gestorBox.enviarMsg(new byte[] {ID,Comunicar.DRT, Byte.parseByte(txtRadius.getText()), Byte.parseByte(txtAngle.getText())});
-				gestorBox.enviarMsg(new byte[] {Comunicar.GUI, Comunicar.DRT, radius, angle}, "");
+				// gestorBox.enviarMsg(new byte[] {ID,Comunicar.DRT,
+				// Byte.parseByte(txtRadius.getText()),
+				// Byte.parseByte(txtAngle.getText())});
+				gestorBox.enviarMsg(new byte[] { Comunicar.GUI, Comunicar.DRT, radius, angle }, "");
 				manager.le();
 			}
 		});
@@ -470,12 +464,12 @@ public class RobotGUI {
 		chckbxGestor.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(chckbxGestor.isSelected()){
+				if (chckbxGestor.isSelected()) {
 					chckbxEvitar.setEnabled(true);
 					chckbxVaguear.setEnabled(true);
 					manager = new Gestor();
 					manager.start();
-				}else {
+				} else {
 					chckbxEvitar.setEnabled(false);
 					chckbxVaguear.setEnabled(false);
 					manager = null;
