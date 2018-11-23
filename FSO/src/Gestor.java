@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Gestor extends Thread {
+public class Gestor {
 	
 	public static final byte ID = 1;
 	
@@ -104,6 +104,11 @@ public class Gestor extends Thread {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		Gestor proc = new Gestor();
+		proc.run();
 	}
 	
 }

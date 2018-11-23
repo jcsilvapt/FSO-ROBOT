@@ -532,4 +532,5 @@ public class RobotGUI extends Thread {
 		txtrLogging.setLineWrap(true);
 		spLogging.setViewportView(txtrLogging);
 	}
+	
 }
